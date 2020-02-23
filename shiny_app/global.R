@@ -6,6 +6,8 @@ library(shinyWidgets)
 library(DT)
 library(zipcode)
 library(fiftystater)
+library(highcharter)
+library(dplyr)
 
 data(zipcode)
 data(fifty_states)
