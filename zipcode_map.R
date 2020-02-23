@@ -7,6 +7,7 @@ library(feather)
 library(dplyr)
 library(ggplot2)
 library(fiftystater)
+library(highcharter)
 
 data(zipcode)
 data("fifty_states")
@@ -17,8 +18,17 @@ out <- demographics %>%
   group_by(zip5) %>%
   summarise(total_buyers = n()) %>%
   mutate(zip5 = as.character(zip5)) %>%
-  inner_join(zipcode, by = c("zip5" = "zip"))
+  inner_join(zipcode, by = c("zip5" = "zip")) %>%
+  arrange(desc(total_buyers)) %>%
+  select(name = zip5, lat = latitude, lon = longitude, z = total_buyers) %>%
+  head(150)
 
-ggplot() +
-  geom_polygon(data=fifty_states, aes(x=long, y=lat, group = group),color="white", fill="grey92" ) +
-  geom_point(data=out, aes(x=longitude, y=latitude, size = total_buyers / 100), alpha = 0.1)
+hcmap(map = "countries/us/us-all", showInLegend = FALSE) %>%
+  hc_add_series(
+    type = "mapbubble",
+    name = "Zip Code",
+    data = out,
+    maxSize = "5%",
+    showInLegend = FALSE
+  ) %>%
+  hc_mapNavigation(enabled = TRUE)
