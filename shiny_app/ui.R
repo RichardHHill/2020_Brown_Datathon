@@ -6,7 +6,7 @@ head <- dashboardHeader(
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem(
-      text = "Column Comparison",
+      text = "Parameter Comparison",
       tabName = "parameter_chart"
     ),
     menuItem(
@@ -21,7 +21,7 @@ body <- dashboardBody(
     tabItem(
       tabName = "parameter_chart",
       box(
-        width = 6,
+        width = 9,
         fluidRow(
           column(
             3,
@@ -35,6 +35,14 @@ body <- dashboardBody(
                 actionsBox = TRUE
               )
             )
+          ),
+          column(
+            2,
+            pickerInput(
+              "aggregate_fun",
+              "Aggregate Statistic",
+              choices = list("Mean", "Median")
+            )
           )
         ),
         fluidRow(
@@ -42,12 +50,29 @@ body <- dashboardBody(
         )
       ),
       box(
-        width = 6,
+        width = 3,
         DTOutput("category_count")
       )
     ),
     tabItem(
-      tabName = "zip_code"
+      tabName = "zip_code",
+      box(
+        width = 12,
+        fluidRow(
+          column(
+            2,
+            numericInput(
+              "num_zipcodes",
+              "# Zipcodes to Display",
+              150,
+              min = 0
+            )
+          )
+        ),
+        fluidRow(
+          highchartOutput("map", height = "800px")
+        )
+      )
     )
   )
 )
